@@ -1,0 +1,23 @@
+---
+import type { Product } from '../lib/content';
+import ProductCard from './ProductCard.astro';
+interface Props { products: Product[]; title: string; eyebrow?: string; filters?: { label: string; key: string }[]; id?: string }
+const { products, title, eyebrow = 'Shop', filters = [], id = 'shop' } = Astro.props;
+---
+<section id={id} class="py-14 border-t border-zinc-900 bg-black">
+  <div class="container mx-auto px-4 sm:px-6">
+    <div class="flex items-end justify-between gap-4 mb-6">
+      <div><p class="font-mono text-xs uppercase tracking-widest text-brand-accent">{eyebrow}</p><h2 class="text-2xl md:text-3xl font-bold mt-1">{title}</h2></div>
+      {filters.length > 0 && (
+        <div class="hidden sm:flex gap-2 text-xs" role="group" aria-label="Filter products" data-shelf-filters>
+          {filters.map((f, i) => <button type="button" class={`px-3 py-1.5 rounded-pill border transition-colors ${i === 0 ? 'bg-brand-surface-raised border-brand-surface-raised text-white' : 'border-brand-border text-brand-text-muted hover:text-white'}`} data-filter={f.key} aria-pressed={i === 0 ? 'true' : 'false'}>{f.label}</button>)}
+        </div>
+      )}
+    </div>
+    <div class="shelf flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0" data-shelf>
+      {products.map((p) => <ProductCard product={p} />)}
+      <p class="hidden text-brand-text-muted text-sm py-8" data-shelf-empty>Nothing in this group yet.</p>
+    </div>
+  </div>
+</section>
+<script src="../scripts/shelf-filter.ts"></script>

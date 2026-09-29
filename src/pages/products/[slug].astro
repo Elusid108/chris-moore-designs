@@ -1,52 +1,67 @@
 ---
-import { getCollection, getEntry, getEntries, render } from 'astro:content';
+import { getCatalog, pick, priceRange, stripHtml } from '../../lib/content';
 import Base from '../../layouts/Base.astro';
-import AddToCart from '../../components/AddToCart.astro';
+import ProductHero from '../../components/ProductHero.astro';
+import ProductGallery from '../../components/ProductGallery.astro';
 import SpecTable from '../../components/SpecTable.astro';
 import ReleaseList from '../../components/ReleaseList.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import Icon from '../../components/Icon.astro';
 
 export async function getStaticPaths() {
-  const products = await getCollection('products');
-  return products.map((p) => ({ params: { slug: p.id }, props: { product: p } }));
+  const c = await getCatalog();
+  return c.products.map((p) => ({ params: { slug: p.slug }, props: { id: p.id } }));
 }
-const { product } = Astro.props;
-const { Content } = await render(product);
-const family = await getEntry(product.data.family);
-const firmware = await getEntries(product.data.firmware);
-const software = await getEntries(product.data.software);
+const c = await getCatalog();
+const p = c.productById.get(Astro.props.id)!;
+const family = c.familyById.get(p.family);
+const firmware = pick(c.firmwareById, p.firmware);
+const software = pick(c.softwareById, p.software);
+const related = pick(c.productById, p.related).filter((r) => r.id !== p.id);
+const pills = p.variants.map((v) => ({ label: v.title === 'Default Title' ? p.title : v.title, product: p, variant: v }));
+const price = priceRange(p);
+const ld = {
+  '@context': 'https://schema.org', '@type': 'Product', name: p.title, sku: p.sku, description: stripHtml(p.summary), brand: { '@type': 'Brand', name: c.settings.site.name },
+  image: p.images.map((i) => new URL(i.hero || i.url, Astro.site).toString()),
+  offers: { '@type': 'AggregateOffer', priceCurrency: c.settings.site.currency, lowPrice: price.min, highPrice: price.max, offerCount: p.variants.length, availability: 'https://schema.org/PreOrder', url: new URL(`/products/${p.slug}/`, Astro.site).toString() },
+};
 ---
-<Base title={product.data.name} description={product.data.summary}>
-  <article class="pt-32 pb-20 container mx-auto px-4 sm:px-6 grid lg:grid-cols-3 gap-10">
-    <div class="lg:col-span-2 space-y-8">
-      <div>
-        <a href={`/families/${family!.id}/`} class="font-mono text-xs uppercase tracking-widest text-brand-accent hover:underline">{family!.data.name}</a>
-        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mt-2">{product.data.name}</h1>
-        <p class="text-brand-text-muted text-lg mt-4">{product.data.summary}</p>
-      </div>
-      <div class="aspect-video rounded-2xl bg-gradient-to-br from-brand-surface to-black border border-brand-border flex items-center justify-center text-brand-text-subtle font-mono text-sm">product image</div>
-      <div class="text-brand-text-muted"><Content /></div>
-      {firmware.length > 0 && (
-        <section>
-          <h2 class="text-2xl font-bold mb-4">Firmware</h2>
-          <ReleaseList releases={firmware} />
+<Base title={p.title} description={stripHtml(p.summary)} image={p.images[0]?.hero || p.images[0]?.url || '/og.jpg'}>
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <nav aria-label="Breadcrumb" class="container mx-auto px-4 sm:px-6 pt-6 font-mono text-xs text-brand-text-subtle flex gap-2">
+    <a href="/#shop" class="hover:text-white">Shop</a><span>/</span>{family && <><a href={`/families/${family.slug}/`} class="hover:text-white">{family.name}</a><span>/</span></>}<span class="text-brand-accent">{p.sku}</span>
+  </nav>
+  <ProductHero product={p} familyName={`${family?.name || ''} · ${family?.category || 'hardware'}`} pills={pills} showSpecs={false} />
+
+  <article class="container mx-auto px-4 sm:px-6 pb-20 grid lg:grid-cols-3 gap-10">
+    <div class="lg:col-span-2 space-y-12">
+      {p.description && <section><h2 class="text-2xl font-bold mb-4">About</h2><div class="prose-html text-brand-text-muted leading-relaxed max-w-prose" set:html={p.description} /></section>}
+      <ProductGallery product={p} />
+      {firmware.length > 0 && <section><h2 class="text-2xl font-bold mb-4">Firmware</h2><ReleaseList releases={firmware} productById={c.productById} /></section>}
+      {software.length > 0 && (
+        <section><h2 class="text-2xl font-bold mb-4">Software</h2>
+          <ul class="space-y-3">{software.map((s) => <li class="rounded-xl bg-brand-surface border border-brand-border p-4"><a href={`/software/#${s.slug}`} class="font-bold hover:text-brand-accent">{s.name}</a>{s.version && <span class="font-mono text-brand-accent text-xs ml-2">v{s.version}</span>}<p class="text-sm text-brand-text-muted mt-1">{s.summary}</p></li>)}</ul>
         </section>
       )}
-      {software.length > 0 && (
-        <section>
-          <h2 class="text-2xl font-bold mb-4">Software</h2>
-          <ul class="space-y-2">{software.map((s) => <li><a href="/software/" class="text-brand-accent hover:underline">{s.data.name}</a> <span class="text-brand-text-muted text-sm">— {s.data.summary}</span></li>)}</ul>
+      {p.files.length > 0 && (
+        <section><h2 class="text-2xl font-bold mb-4">Downloads</h2>
+          <ul class="space-y-2">{p.files.map((f) => <li><a href={f.url} class="inline-flex items-center gap-2 text-brand-accent hover:underline" download><Icon name="download" size={16} />{f.name}</a>{f.description && <span class="text-sm text-brand-text-muted ml-2">{f.description}</span>}</li>)}</ul>
         </section>
       )}
     </div>
-    <aside class="space-y-6 lg:sticky lg:top-28 self-start">
-      <div class="rounded-xl bg-brand-surface/50 border border-brand-border p-6">
-        <p class="font-mono text-xs uppercase tracking-widest text-brand-text-muted">SKU {product.data.sku}</p>
-        <AddToCart handle={product.data.shopifyHandle} placeholderPrice={product.data.placeholderPrice} class="mt-4" />
-      </div>
-      <div class="rounded-xl bg-brand-surface/50 border border-brand-border p-6">
-        <h2 class="font-bold mb-3">Specifications</h2>
-        <SpecTable specs={product.data.specs} />
-      </div>
+    <aside class="space-y-6 lg:sticky lg:top-24 self-start">
+      {p.specs && <div class="rounded-xl bg-brand-surface/50 border border-brand-border p-6">{!p.specs.includes('<h3>') && <h2 class="font-bold mb-3">Specifications</h2>}<SpecTable html={p.specs} /></div>}
+      {family?.portfolioSlug && <a href={`${c.settings.site.portfolioUrl}/projects/${family.portfolioSlug}/`} class="block text-xs uppercase tracking-wide text-brand-accent hover:underline">See it in the portfolio ↗</a>}
     </aside>
   </article>
+
+  {related.length > 0 && (
+    <section class="py-14 border-t border-zinc-900 bg-black">
+      <div class="container mx-auto px-4 sm:px-6">
+        <p class="font-mono text-xs uppercase tracking-widest text-brand-accent">Goes with</p>
+        <h2 class="text-2xl md:text-3xl font-bold mt-1 mb-6">Related</h2>
+        <div class="shelf flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">{related.map((r) => <ProductCard product={r} />)}</div>
+      </div>
+    </section>
+  )}
 </Base>

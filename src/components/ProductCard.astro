@@ -1,0 +1,25 @@
+---
+import type { Product } from '../lib/content';
+import { priceRange } from '../lib/content';
+import ProductImage from './ProductImage.astro';
+import AddToCartButton from './AddToCartButton.astro';
+interface Props { product: Product; familyId?: string }
+const { product: p } = Astro.props;
+const price = priceRange(p);
+const v = p.variants[0];
+---
+<article class="w-64 shrink-0 rounded-xl bg-brand-surface border border-brand-border hover:border-cyan-500/50 transition-colors overflow-hidden flex flex-col" data-shelf-item data-family={p.family} data-bundle={p.badges.bundle ? '1' : '0'}>
+  <a href={`/products/${p.slug}/`} class="aspect-square relative block bg-black" aria-label={p.title}>
+    <ProductImage product={p} size="thumb" />
+    {p.badges.bundle ? <span class="absolute top-3 left-3 text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-brand-secondary-strong text-white">Bundle &amp; save</span> : p.badges.bestSeller ? <span class="absolute top-3 left-3 text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-brand-accent-deep text-white">Best seller</span> : null}
+  </a>
+  <div class="p-4 flex flex-col gap-2 flex-1">
+    <div class="flex items-baseline justify-between gap-2"><h3 class="font-bold"><a href={`/products/${p.slug}/`} class="hover:text-brand-accent">{p.title}</a></h3><span class="font-mono whitespace-nowrap">{price.label}</span></div>
+    <p class="text-xs text-brand-text-muted flex-1" set:html={p.summary} />
+    {p.variants.length > 1 ? (
+      <a href={`/products/${p.slug}/`} class="mt-2 w-full py-2.5 border border-brand-border-strong text-center font-bold rounded-lg text-sm hover:border-brand-accent hover:text-white transition-colors">Choose options</a>
+    ) : (
+      <AddToCartButton variant={v} class="mt-2 w-full py-2.5 text-sm" />
+    )}
+  </div>
+</article>

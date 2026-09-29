@@ -1,0 +1,21 @@
+---
+import { SETTINGS } from '../lib/store-config';
+import Icon from './Icon.astro';
+const year = new Date().getFullYear();
+const { trustRows, links } = SETTINGS.footer;
+---
+<footer id="footer" class="border-t border-zinc-900">
+  {trustRows.length > 0 && (
+    <div class="container mx-auto px-4 sm:px-6 py-8 grid sm:grid-cols-3 gap-4 text-xs text-brand-text-muted">
+      {trustRows.map((r) => (
+        <div class="flex gap-3"><Icon name={r.icon} class="text-brand-accent shrink-0 mt-0.5" size={18} /><span><strong class="text-white block">{r.title}</strong>{r.text}</span></div>
+      ))}
+    </div>
+  )}
+  <div class="container mx-auto px-4 sm:px-6 py-6 border-t border-zinc-900 flex flex-col md:flex-row justify-between gap-4 text-sm text-brand-text-muted">
+    <div class="font-mono">&copy; {year} {SETTINGS.site.name}. All rights reserved.</div>
+    <div class="flex flex-wrap gap-x-6 gap-y-2 uppercase tracking-wide text-xs">
+      {links.map((l) => <a href={l.href} class="hover:text-white">{l.label}</a>)}
+    </div>
+  </div>
+</footer>

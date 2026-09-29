@@ -10,11 +10,8 @@
  * can. See docs/INTEGRATION.md.
  */
 
-export const SHOPIFY_DOMAIN = import.meta.env.PUBLIC_SHOPIFY_DOMAIN as string | undefined;
-export const SHOPIFY_TOKEN = import.meta.env.PUBLIC_SHOPIFY_STOREFRONT_TOKEN as string | undefined;
-export const SHOPIFY_API_VERSION = (import.meta.env.PUBLIC_SHOPIFY_API_VERSION as string | undefined) || '2026-07';
-
-export const shopifyConfigured = Boolean(SHOPIFY_DOMAIN && SHOPIFY_TOKEN);
+import { SHOPIFY_DOMAIN, SHOPIFY_TOKEN, SHOPIFY_API_VERSION, shopifyConfigured } from './store-config';
+export { SHOPIFY_DOMAIN, SHOPIFY_TOKEN, SHOPIFY_API_VERSION, shopifyConfigured };
 
 export function storefrontEndpoint(): string {
   return `https://${SHOPIFY_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
@@ -67,7 +64,7 @@ async function query<T>(gql: string, variables: Record<string, unknown> = {}): P
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-Shopify-Storefront-Access-Token': SHOPIFY_TOKEN as string,
+      'X-Shopify-Storefront-Access-Token': SHOPIFY_TOKEN,
     },
     body: JSON.stringify({ query: gql, variables }),
   });

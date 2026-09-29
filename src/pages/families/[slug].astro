@@ -1,33 +1,29 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCatalog } from '../../lib/content';
 import Base from '../../layouts/Base.astro';
-import AddToCart from '../../components/AddToCart.astro';
+import ProductShelf from '../../components/ProductShelf.astro';
 
 export async function getStaticPaths() {
-  const families = await getCollection('families');
-  return families.map((f) => ({ params: { slug: f.id }, props: { family: f } }));
+  const c = await getCatalog();
+  return c.families.map((f) => ({ params: { slug: f.slug }, props: { id: f.id } }));
 }
-const { family } = Astro.props;
-const { Content } = await render(family);
-const products = (await getCollection('products', (p) => p.data.family.id === family.id)).sort((a, b) => a.data.order - b.data.order);
+const c = await getCatalog();
+const f = c.familyById.get(Astro.props.id)!;
+const products = c.products.filter((p) => p.family === f.id);
+const hero = f.heroImage;
 ---
-<Base title={family.data.name} description={family.data.tagline}>
-  <section class="pt-32 pb-12 container mx-auto px-4 sm:px-6 max-w-4xl">
-    <p class="font-mono text-xs uppercase tracking-widest text-brand-accent mb-2">{family.data.category}</p>
-    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight">{family.data.name}</h1>
-    <p class="text-brand-text-muted text-lg mt-4">{family.data.tagline}</p>
-    <div class="mt-6 text-brand-text-muted"><Content /></div>
-    {family.data.portfolioSlug && (
-      <a class="mt-4 inline-block text-xs uppercase tracking-wide text-brand-accent hover:underline" href={`https://chrismoore.me/projects/${family.data.portfolioSlug}/`}>See it in the portfolio ↗</a>
-    )}
+<Base title={f.name} description={f.tagline}>
+  <section class="container mx-auto px-4 sm:px-6 pt-10 pb-6 grid lg:grid-cols-2 gap-8 items-center">
+    <div>
+      <p class="font-mono text-xs uppercase tracking-widest text-brand-accent">{f.category} · product family</p>
+      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mt-2">{f.name}</h1>
+      <p class="text-brand-text-muted text-lg mt-4">{f.tagline}</p>
+      {f.description && <div class="prose-html mt-4 text-brand-text-muted" set:html={f.description} />}
+      {f.portfolioSlug && <a class="mt-4 inline-block text-xs uppercase tracking-wide text-brand-accent hover:underline" href={`${c.settings.site.portfolioUrl}/projects/${f.portfolioSlug}/`}>See it in the portfolio ↗</a>}
+    </div>
+    <div class="aspect-[4/3] rounded-2xl border border-brand-border overflow-hidden bg-black">
+      {hero ? <img src={hero.hero || hero.url} alt={hero.alt || f.name} class="w-full h-full object-cover" loading="eager" /> : <div class="w-full h-full render-placeholder" role="img" aria-label={`${f.name} (image coming soon)`}></div>}
+    </div>
   </section>
-  <section class="py-12 container mx-auto px-4 sm:px-6 max-w-4xl grid md:grid-cols-2 gap-6">
-    {products.map((p) => (
-      <div class="rounded-xl bg-brand-surface border border-brand-border p-6 flex flex-col gap-3">
-        <a href={`/products/${p.id}/`} class="text-2xl font-bold hover:text-brand-accent">{p.data.name}</a>
-        <p class="text-sm text-brand-text-muted">{p.data.summary}</p>
-        <AddToCart handle={p.data.shopifyHandle} placeholderPrice={p.data.placeholderPrice} class="mt-auto pt-2" />
-      </div>
-    ))}
-  </section>
+  <ProductShelf products={products} title={`${f.name} products`} eyebrow="Shop" id="products" />
 </Base>

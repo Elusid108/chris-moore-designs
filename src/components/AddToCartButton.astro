@@ -1,0 +1,20 @@
+---
+// The buy button. Enabled only when the variant has been synced to Shopify and
+// the storefront is configured; otherwise it reads "Coming soon" and the cart
+// drawer explains. The cart script reads data-variant-id and data-quantity.
+import { shopifyConfigured } from '../lib/store-config';
+interface Props { variant?: { shopifyVariantId?: string | null; sku: string } | undefined; class?: string; label?: string; quantityFrom?: string }
+const { variant, class: cls = '', label = 'Add to cart', quantityFrom } = Astro.props;
+const ready = Boolean(shopifyConfigured && variant?.shopifyVariantId);
+---
+<button
+  type="button"
+  class={`bg-white text-black font-bold rounded-lg hover:bg-brand-accent transition-colors disabled:opacity-50 disabled:hover:bg-white ${cls}`}
+  data-add-to-cart
+  data-variant-id={variant?.shopifyVariantId || undefined}
+  data-sku={variant?.sku}
+  data-quantity-from={quantityFrom}
+  disabled={!ready}
+  aria-disabled={!ready}
+  title={ready ? undefined : 'The store is opening soon'}
+>{ready ? label : 'Coming soon'}</button>

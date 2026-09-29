@@ -71,3 +71,36 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* Product render placeholder (from the Storefront mockup) until photos exist. */
+.render-placeholder {
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(34, 211, 238, 0.28), transparent 60%),
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.08) 1px, transparent 1.5px) 0 0 / 12px 12px,
+    linear-gradient(160deg, #18181b, #000);
+}
+
+/* Horizontal product shelf */
+.shelf { scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: #27272a transparent; }
+.shelf > * { scroll-snap-align: start; }
+
+/* Variant pills */
+.variant[aria-pressed="true"] { border-color: var(--color-brand-accent); color: #fff; background: rgba(34, 211, 238, 0.1); }
+
+/* CMS-generated specs HTML: <h3> group titles + <dl> rows */
+.spec-html h3 { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-brand-accent); margin: 1rem 0 0.5rem; }
+.spec-html h3:first-child { margin-top: 0; }
+.spec-html dl { display: grid; grid-template-columns: minmax(7rem, auto) 1fr; column-gap: 1rem; row-gap: 0.35rem; }
+.spec-html dt { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-brand-text-muted); padding-top: 0.15rem; }
+.spec-html dd { color: var(--color-brand-text); }
+
+/* Quill rich text from the CMS */
+.prose-html p { margin: 0 0 0.75rem; }
+.prose-html p:last-child { margin-bottom: 0; }
+.prose-html ul, .prose-html ol { padding-left: 1.25rem; margin: 0.5rem 0; }
+.prose-html ul { list-style: disc; } .prose-html ol { list-style: decimal; }
+.prose-html li { margin: 0.2rem 0; }
+.prose-html a { color: var(--color-brand-accent); text-decoration: underline; text-underline-offset: 3px; }
+.prose-html strong { color: #fff; }
+.prose-html h2, .prose-html h3 { font-weight: 700; margin: 1.25rem 0 0.5rem; color: #fff; }
+.prose-html h2 { font-size: 1.25rem; } .prose-html h3 { font-size: 1.05rem; }

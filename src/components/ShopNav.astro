@@ -1,0 +1,39 @@
+---
+import Wordmark from './Wordmark.astro';
+import { SETTINGS } from '../lib/store-config';
+const links = [
+  { href: '/#shop', label: 'Shop' },
+  { href: '/firmware/', label: 'Firmware' },
+  { href: '/software/', label: 'Software' },
+  { href: '/services/', label: 'Services' },
+  { href: SETTINGS.site.portfolioUrl, label: 'Portfolio ↗' },
+];
+---
+<header class="sticky top-0 z-40 bg-brand-bg/90 backdrop-blur border-b border-zinc-900">
+  <div class="container mx-auto px-4 sm:px-6 h-16 flex items-center gap-3 sm:gap-4">
+    <Wordmark class="shrink-0 text-lg" hideTextOnMobile />
+    <nav class="hidden md:flex items-center gap-5 text-xs uppercase tracking-wide text-brand-text-muted ml-2" aria-label="Main">
+      {links.map((l) => <a href={l.href} class="hover:text-white transition-colors">{l.label}</a>)}
+    </nav>
+    <div class="flex-1 max-w-md ml-auto relative" data-search>
+      <label class="relative block">
+        <span class="sr-only">Search products, firmware and docs</span>
+        <input id="site-search" type="search" autocomplete="off" placeholder="Search boards, firmware, docs…" class="w-full bg-brand-surface border border-brand-border rounded-pill pl-9 pr-4 py-2 text-sm placeholder:text-brand-text-subtle focus:border-brand-accent-strong" data-search-input />
+        <svg aria-hidden="true" class="absolute left-3 top-2.5 text-brand-text-subtle" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      </label>
+      <div class="absolute left-0 right-0 top-full mt-2 rounded-xl bg-brand-surface border border-brand-border shadow-xl overflow-hidden hidden" role="listbox" aria-label="Search results" data-search-results></div>
+    </div>
+    <button type="button" class="shrink-0 flex items-center gap-2 px-3 sm:px-4 py-2 rounded-pill bg-white text-black font-bold text-sm hover:bg-brand-accent transition-colors" aria-label="Open cart" data-cart-open>
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+      <span class="font-mono" data-cart-subtotal>$0.00</span>
+    </button>
+    <button type="button" class="md:hidden text-white p-1" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle>
+      <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+    </button>
+  </div>
+  <nav id="mobile-menu" class="hidden md:hidden glass-panel px-4 py-3 flex-col gap-1 text-sm uppercase tracking-wide text-brand-text-muted" aria-label="Main (mobile)" data-mobile-menu>
+    {links.map((l) => <a href={l.href} class="py-2 hover:text-white">{l.label}</a>)}
+  </nav>
+</header>
+<script src="../scripts/nav.ts"></script>
+<script src="../scripts/search.ts"></script>

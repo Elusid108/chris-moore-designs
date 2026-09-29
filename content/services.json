@@ -1,0 +1,45 @@
+[
+  {
+    "id": "e4a5f6b7-4444-4d8e-9f2a-3b4c5d6e7f01",
+    "slug": "color-lithophanes",
+    "name": "Custom color lithophanes",
+    "order": 1,
+    "startingPrice": 45,
+    "quoteUrl": null,
+    "image": null,
+    "summary": "Send a photo, get a backlit full-color lithophane printed on a Bambu X1C, optionally with a PixelDecode-driven lamp base.",
+    "description": "<p>Sizes from 100 mm to 300 mm. Lamp bases available with a PXD-Mini inside. Supply a photo at least 2,000 px on the long edge; expect 5–7 business days.</p>",
+    "relatedApps": [
+      "d3f4e5a6-3333-4c7d-8e1f-2a3b4c5d6e02",
+      "d3f4e5a6-3333-4c7d-8e1f-2a3b4c5d6e03",
+      "d3f4e5a6-3333-4c7d-8e1f-2a3b4c5d6e04"
+    ],
+    "timestamp": "2026-09-29T00:00:00.000Z"
+  },
+  {
+    "id": "e4a5f6b7-4444-4d8e-9f2a-3b4c5d6e7f02",
+    "slug": "custom-pcba",
+    "name": "Custom PCBA design",
+    "order": 2,
+    "startingPrice": null,
+    "quoteUrl": null,
+    "image": null,
+    "summary": "Schematic, layout and small-run assembly for pixel and lighting control boards.",
+    "description": "",
+    "relatedApps": [],
+    "timestamp": "2026-09-29T00:00:00.000Z"
+  },
+  {
+    "id": "e4a5f6b7-4444-4d8e-9f2a-3b4c5d6e7f03",
+    "slug": "commissioning",
+    "name": "Install & commissioning",
+    "order": 3,
+    "startingPrice": null,
+    "quoteUrl": null,
+    "image": null,
+    "summary": "On-site pixel mapping, network design and show programming for permanent installs.",
+    "description": "",
+    "relatedApps": [],
+    "timestamp": "2026-09-29T00:00:00.000Z"
+  }
+]

@@ -1,24 +1,26 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCatalog } from '../lib/content';
 import Base from '../layouts/Base.astro';
-const apps = await getCollection('software');
+import Icon from '../components/Icon.astro';
+const c = await getCatalog();
 ---
 <Base title="Software" description="Desktop and web apps that go with Chris Moore Designs hardware.">
-  <section class="pt-32 pb-20 container mx-auto px-4 sm:px-6 max-w-4xl">
+  <section class="pt-12 pb-20 container mx-auto px-4 sm:px-6 max-w-4xl">
     <p class="font-mono text-xs uppercase tracking-widest text-brand-accent mb-2">Software</p>
     <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-10">Apps</h1>
     <div class="grid md:grid-cols-2 gap-6">
-      {apps.map((s) => (
-        <div class="rounded-xl bg-brand-surface border border-brand-border p-6">
-          <h2 class="text-xl font-bold">{s.data.name} {s.data.version && <span class="font-mono text-brand-accent text-sm">v{s.data.version}</span>}</h2>
-          <p class="text-sm text-brand-text-muted mt-2">{s.data.summary}</p>
-          <div class="mt-3 flex flex-wrap gap-2">{s.data.platforms.map((p) => <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-brand-surface-raised text-brand-text-muted">{p}</span>)}</div>
+      {c.software.map((s) => (
+        <article id={s.slug} class="rounded-xl bg-brand-surface border border-brand-border p-6 scroll-mt-24">
+          <h2 class="text-xl font-bold">{s.name}{s.version && <span class="font-mono text-brand-accent text-sm ml-2">v{s.version}</span>}{s.wip && <span class="ml-2 text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-brand-secondary-strong text-white align-middle">WIP</span>}</h2>
+          <p class="text-sm text-brand-text-muted mt-2">{s.summary}</p>
+          {s.description && <div class="prose-html text-sm text-brand-text-muted mt-2" set:html={s.description} />}
+          <div class="mt-3 flex flex-wrap gap-2">{s.platforms.map((p) => <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-brand-surface-raised text-brand-text-muted">{p}</span>)}</div>
           <div class="mt-4 flex flex-wrap gap-4 text-xs uppercase tracking-wide font-medium">
-            {s.data.appUrl && <a class="text-brand-accent hover:underline" href={s.data.appUrl} rel="noopener">Launch ↗</a>}
-            {s.data.releaseUrl && <a class="text-brand-text-muted hover:text-white" href={s.data.releaseUrl} rel="noopener">Download</a>}
-            {s.data.repo && <a class="text-brand-text-muted hover:text-white" href={s.data.repo} rel="noopener">Source</a>}
+            {s.appUrl && <a class="text-brand-accent hover:underline inline-flex items-center gap-1" href={s.appUrl} rel="noopener"><Icon name="external" size={14} /> Launch</a>}
+            {s.releaseUrl && <a class="text-brand-text-muted hover:text-white inline-flex items-center gap-1" href={s.releaseUrl} rel="noopener"><Icon name="download" size={14} /> Download</a>}
+            {s.repo && <a class="text-brand-text-muted hover:text-white" href={s.repo} rel="noopener">Source</a>}
           </div>
-        </div>
+        </article>
       ))}
     </div>
   </section>

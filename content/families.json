@@ -1,0 +1,26 @@
+[
+  {
+    "id": "3f4c1a9e-0d2b-4f6a-9c1e-2b7d8e5a1f01",
+    "slug": "pixeldecode",
+    "name": "PixelDecode",
+    "category": "hardware",
+    "order": 1,
+    "portfolioSlug": "mini-pyramid",
+    "tagline": "ESP32-S3 pixel decoders that take an Art-Net/sACN/DDP stream and drive WS281x, SK6812 and APA102 pixels without a PC in the loop.",
+    "description": "<p>Custom PCBAs built around the ESP32-S3. Level-shifted outputs, fused power, 4- or 8-pin pixel headers and a USB-C console. Runs open firmware you can flash from the browser.</p>",
+    "heroImage": null,
+    "timestamp": "2026-09-29T00:00:00.000Z"
+  },
+  {
+    "id": "3f4c1a9e-0d2b-4f6a-9c1e-2b7d8e5a1f02",
+    "slug": "pixelpilot",
+    "name": "PixelPilot",
+    "category": "systems",
+    "order": 2,
+    "portfolioSlug": null,
+    "tagline": "A Raspberry Pi control interface that schedules, previews and pushes shows to every PixelDecode board on the network.",
+    "description": "<p>A HAT plus SD image for a Raspberry Pi 4/5. Web UI on the local network, show scheduler, live preview, board discovery and OTA firmware updates for the whole fleet.</p>",
+    "heroImage": null,
+    "timestamp": "2026-09-29T00:00:00.000Z"
+  }
+]

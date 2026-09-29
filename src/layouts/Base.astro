@@ -1,16 +1,17 @@
 ---
 import '../styles/global.css';
-import Nav from '../components/Nav.astro';
-import Footer from '../components/Footer.astro';
-import { SHOPIFY_DOMAIN } from '../lib/shopify';
+import ShopNav from '../components/ShopNav.astro';
+import TrustFooter from '../components/TrustFooter.astro';
+import CartDrawer from '../components/CartDrawer.astro';
+import { SHOPIFY_DOMAIN, SETTINGS } from '../lib/store-config';
 
 interface Props {
   title: string;
   description?: string;
   image?: string;
 }
-const { title, description = 'Pixel hardware, firmware, software and custom fabrication for pro-sumer DIYers, by Chris Moore.', image = '/og.jpg' } = Astro.props;
-const fullTitle = title === 'Home' ? 'Chris Moore Designs' : `${title} · Chris Moore Designs`;
+const { title, description = SETTINGS.site.tagline, image = '/og.jpg' } = Astro.props;
+const fullTitle = title === 'Home' ? SETTINGS.site.name : `${title} · ${SETTINGS.site.name}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 
 // GitHub Pages cannot set response headers, so the CSP lives in a meta tag.
@@ -42,7 +43,7 @@ const csp = [
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Chris Moore Designs" />
+    <meta property="og:site_name" content={SETTINGS.site.name} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -56,10 +57,11 @@ const csp = [
   </head>
   <body class="min-h-screen antialiased">
     <a href="#main" class="skip-link">Skip to content</a>
-    <Nav />
+    <ShopNav />
     <main id="main">
       <slot />
     </main>
-    <Footer />
+    <TrustFooter />
+    <CartDrawer />
   </body>
 </html>

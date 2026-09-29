@@ -1,0 +1,40 @@
+[
+  {
+    "id": "c2e3d4f5-2222-4b6c-9d0e-1f2a3b4c5d01",
+    "slug": "pxd-fw-1-4-2",
+    "name": "pxd-fw",
+    "version": "1.4.2",
+    "date": "2026-08-01",
+    "targets": [
+      "b1d2c3e4-1111-4a5b-8c9d-0e1f2a3b4c01",
+      "b1d2c3e4-1111-4a5b-8c9d-0e1f2a3b4c02",
+      "b1d2c3e4-1111-4a5b-8c9d-0e1f2a3b4c03"
+    ],
+    "downloadUrl": "https://github.com/Elusid108/pxd-fw/releases/latest",
+    "file": null,
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "webInstallerManifest": "https://chrismooredesigns.com/flash/pxd-fw/manifest.json",
+    "repo": "https://github.com/Elusid108/pxd-fw",
+    "ota": true,
+    "notes": "<ul><li>Art-Net sync packet support</li><li>Per-output color order override</li><li>Fix: DDP frames larger than 1,440 bytes were dropped on PXD-Mini</li></ul>",
+    "timestamp": "2026-09-29T00:00:00.000Z"
+  },
+  {
+    "id": "c2e3d4f5-2222-4b6c-9d0e-1f2a3b4c5d02",
+    "slug": "pixelpilot-os-0-9-1",
+    "name": "PixelPilot OS",
+    "version": "0.9.1",
+    "date": "2026-07-12",
+    "targets": [
+      "b1d2c3e4-1111-4a5b-8c9d-0e1f2a3b4c04"
+    ],
+    "downloadUrl": "https://github.com/Elusid108/pixelpilot/releases/latest",
+    "file": null,
+    "sha256": null,
+    "webInstallerManifest": null,
+    "repo": "https://github.com/Elusid108/pixelpilot",
+    "ota": true,
+    "notes": "<ul><li>Fleet OTA for pxd-fw 1.4.x</li><li>Show scheduler: sunset/sunrise triggers</li></ul>",
+    "timestamp": "2026-09-29T00:00:00.000Z"
+  }
+]

@@ -1,0 +1,73 @@
+---
+// Product-forward hero from the Storefront mockup. `options` are the pills:
+// on a product page they are the product's own variants; on the home page they
+// can span sibling products (settings.home.heroVariantsFrom), each pill carrying
+// the data the script swaps in (title, summary, price, specs, variant id, url).
+import type { Product } from '../lib/content';
+import { money } from '../lib/content';
+import ProductImage from './ProductImage.astro';
+import AddToCartButton from './AddToCartButton.astro';
+import { SETTINGS } from '../lib/store-config';
+
+interface Pill { label: string; product: Product; variant: Product['variants'][number] }
+interface Props { product: Product; familyName: string; pills: Pill[]; trustBullets?: string[]; headingLevel?: 'h1' | 'h2'; showSpecs?: boolean; linkTitle?: boolean }
+const { product, familyName, pills, trustBullets = SETTINGS.home.trustBullets, headingLevel = 'h1', showSpecs = true, linkTitle = false } = Astro.props;
+const H = headingLevel;
+const initial = pills.find((p) => p.product.id === product.id) || pills[0];
+const initialVariant = initial?.variant || product.variants[0];
+const optionName = initial?.product.optionName || product.optionName;
+const pillData = (p: Pill) => JSON.stringify({
+  productId: p.product.id, title: p.product.title, summary: p.product.summary, price: money(p.variant.price), sku: p.variant.sku,
+  variantId: p.variant.shopifyVariantId || null, specs: p.product.specs, url: `/products/${p.product.slug}/`, family: familyName,
+  eyebrow: p.product.badges.bundle ? 'Bundle' : p.product.badges.bestSeller ? 'Best seller' : '',
+});
+const eyebrow = product.badges.bundle ? 'Bundle & save' : product.badges.bestSeller ? 'Best seller' : '';
+---
+<section id="hero" class="container mx-auto px-4 sm:px-6 pt-8 pb-16 grid lg:grid-cols-2 gap-8 items-start" data-product-hero>
+  <div class="aspect-square lg:aspect-[4/3] rounded-2xl border border-brand-border relative overflow-hidden bg-black">
+    <ProductImage product={product} size="hero" eager />
+    {eyebrow && <span class="absolute top-4 left-4 text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-brand-accent-deep text-white" data-hero-badge>{eyebrow}</span>}
+    <span class="absolute bottom-4 left-4 font-mono text-xs text-brand-text-muted" data-hero-sku>{initialVariant?.sku || product.sku}</span>
+    {product.images.length > 1 && (
+      <div class="absolute bottom-4 right-4 flex gap-1.5" data-hero-thumbs>
+        {product.images.slice(0, 4).map((img, i) => <button type="button" class={`w-10 h-10 rounded border bg-brand-surface overflow-hidden ${i === 0 ? 'border-brand-accent' : 'border-brand-border-strong'}`} data-hero-thumb={img.hero || img.url} aria-label={`Show image ${i + 1}`}><img src={img.thumb || img.url} alt="" class="w-full h-full object-cover" loading="lazy" /></button>)}
+      </div>
+    )}
+  </div>
+  <div class="space-y-6">
+    <div>
+      <p class="font-mono text-xs uppercase tracking-widest text-brand-accent"><span data-hero-family>{familyName}</span></p>
+      <H class="text-4xl md:text-5xl font-extrabold tracking-tight mt-2">{linkTitle ? <a href={`/products/${product.slug}/`} class="hover:text-brand-accent" data-hero-title-link><span data-hero-title>{product.title}</span></a> : <span data-hero-title>{product.title}</span>}</H>
+      <div class="text-brand-text-muted mt-3 leading-relaxed" data-hero-summary set:html={product.summary} />
+    </div>
+    <div class="flex items-baseline gap-3"><span class="font-mono text-3xl" data-hero-price>{money(initialVariant?.price || '0')}</span><span class="text-sm text-brand-text-subtle">{SETTINGS.site.currency} · in stock</span></div>
+    {pills.length > 1 && (
+      <div>
+        <div class="text-xs uppercase tracking-wide text-brand-text-subtle mb-2" data-hero-option-name>{optionName}</div>
+        <div class="flex flex-wrap gap-2" role="group" aria-label={optionName} data-hero-variants>
+          {pills.map((p) => <button type="button" class="variant px-4 py-2 rounded-lg border border-brand-border-strong text-sm text-brand-text font-mono" aria-pressed={p === initial ? 'true' : 'false'} data-pill={pillData(p)}>{p.label}</button>)}
+        </div>
+      </div>
+    )}
+    <div class="flex items-stretch gap-3">
+      <div class="flex items-center border border-brand-border-strong rounded-lg">
+        <button type="button" class="w-11 h-12 text-lg hover:text-brand-accent" data-qty-step="-1" aria-label="Decrease quantity">−</button>
+        <input id="hero-qty" type="number" min="1" value="1" class="w-12 h-12 text-center bg-transparent font-mono" aria-label="Quantity" data-qty />
+        <button type="button" class="w-11 h-12 text-lg hover:text-brand-accent" data-qty-step="1" aria-label="Increase quantity">+</button>
+      </div>
+      <AddToCartButton variant={initialVariant} class="flex-1 h-12" quantityFrom="hero-qty" />
+    </div>
+    {trustBullets.length > 0 && (
+      <ul class="grid grid-cols-2 gap-2 text-xs text-brand-text-muted pt-2">
+        {trustBullets.map((t) => <li class="flex gap-2"><span class="text-brand-accent">✓</span> {t}</li>)}
+      </ul>
+    )}
+    {showSpecs && product.specs && (
+      <details class="border-t border-brand-border pt-4 text-sm">
+        <summary class="cursor-pointer text-brand-text font-medium">Specifications</summary>
+        <div class="mt-3 spec-html text-brand-text-muted" data-hero-specs set:html={product.specs} />
+      </details>
+    )}
+  </div>
+</section>
+<script src="../scripts/product-hero.ts"></script>

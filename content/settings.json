@@ -1,0 +1,127 @@
+{
+  "site": {
+    "name": "Chris Moore Designs",
+    "tagline": "Pixel hardware, firmware, software and custom fabrication for pro-sumer DIYers.",
+    "url": "https://chrismooredesigns.com",
+    "currency": "USD",
+    "portfolioUrl": "https://chrismoore.me",
+    "github": "https://github.com/Elusid108",
+    "quoteUrl": "https://chrismoore.me/#contact"
+  },
+  "shopify": {
+    "domain": "",
+    "storefrontToken": "",
+    "apiVersion": "2026-07"
+  },
+  "home": {
+    "heroProduct": "b1d2c3e4-1111-4a5b-8c9d-0e1f2a3b4c01",
+    "heroVariantsFrom": [
+      "b1d2c3e4-1111-4a5b-8c9d-0e1f2a3b4c03",
+      "b1d2c3e4-1111-4a5b-8c9d-0e1f2a3b4c01",
+      "b1d2c3e4-1111-4a5b-8c9d-0e1f2a3b4c02"
+    ],
+    "shelf": [
+      "b1d2c3e4-1111-4a5b-8c9d-0e1f2a3b4c01",
+      "b1d2c3e4-1111-4a5b-8c9d-0e1f2a3b4c02",
+      "b1d2c3e4-1111-4a5b-8c9d-0e1f2a3b4c03",
+      "b1d2c3e4-1111-4a5b-8c9d-0e1f2a3b4c04",
+      "b1d2c3e4-1111-4a5b-8c9d-0e1f2a3b4c05"
+    ],
+    "shelfFilters": [
+      {
+        "label": "All",
+        "key": "all"
+      },
+      {
+        "label": "PixelDecode",
+        "key": "3f4c1a9e-0d2b-4f6a-9c1e-2b7d8e5a1f01"
+      },
+      {
+        "label": "PixelPilot",
+        "key": "3f4c1a9e-0d2b-4f6a-9c1e-2b7d8e5a1f02"
+      },
+      {
+        "label": "Bundles",
+        "key": "bundles"
+      }
+    ],
+    "supportStrip": [
+      {
+        "icon": "bolt",
+        "color": "accent",
+        "title": "pxd-fw",
+        "ref": {
+          "firmware": "c2e3d4f5-2222-4b6c-9d0e-1f2a3b4c5d01"
+        },
+        "text": "Open firmware. OTA from PixelPilot or flash from the browser.",
+        "linkLabel": "Release notes",
+        "href": "/firmware/"
+      },
+      {
+        "icon": "app",
+        "color": "secondary",
+        "title": "PixelPilot Desktop",
+        "ref": {
+          "software": "d3f4e5a6-3333-4c7d-8e1f-2a3b4c5d6e01"
+        },
+        "text": "Map pixels from a photo, preview live, flash boards. Win / macOS / Linux.",
+        "linkLabel": "Download free",
+        "href": "/software/"
+      },
+      {
+        "icon": "docs",
+        "color": "hardware",
+        "title": "Docs & wiring guides",
+        "ref": null,
+        "text": "Power budgeting, injection, Art-Net universes, first-boot captive portal.",
+        "linkLabel": "Read the docs",
+        "href": "/firmware/"
+      }
+    ],
+    "trustBullets": [
+      "Ships in 1–2 days from the US",
+      "2-year warranty",
+      "Open firmware, OTA updates",
+      "Secure checkout on Shopify"
+    ],
+    "shelfTitle": "Boards, controllers, bundles",
+    "servicesTitle": "Services"
+  },
+  "footer": {
+    "trustRows": [
+      {
+        "icon": "lock",
+        "title": "Secure checkout",
+        "text": "Payment handled by Shopify. This site never sees your card."
+      },
+      {
+        "icon": "box",
+        "title": "Ships from the US",
+        "text": "Tracked. Most orders leave within 2 business days."
+      },
+      {
+        "icon": "wrench",
+        "title": "2-year warranty",
+        "text": "Open hardware, repairable, schematic published."
+      }
+    ],
+    "links": [
+      {
+        "label": "Portfolio ↗",
+        "href": "https://chrismoore.me"
+      },
+      {
+        "label": "GitHub ↗",
+        "href": "https://github.com/Elusid108"
+      },
+      {
+        "label": "Firmware",
+        "href": "/firmware/"
+      },
+      {
+        "label": "Services",
+        "href": "/services/"
+      }
+    ]
+  }
+}

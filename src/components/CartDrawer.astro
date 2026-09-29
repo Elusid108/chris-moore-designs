@@ -1,0 +1,22 @@
+---
+// Server-rendered cart drawer; src/scripts/cart.ts fills it. One per page.
+import { shopifyConfigured } from '../lib/store-config';
+---
+<div class="fixed inset-0 z-[100] hidden" data-cart-drawer data-shopify-ready={shopifyConfigured ? '1' : '0'}>
+  <div class="absolute inset-0 bg-black/60" data-cart-close></div>
+  <aside role="dialog" aria-modal="true" aria-label="Cart" class="absolute right-0 top-0 h-full w-full max-w-md bg-brand-surface border-l border-brand-border flex flex-col">
+    <header class="flex items-center justify-between px-5 py-4 border-b border-brand-border">
+      <h2 class="font-bold">Cart</h2>
+      <button type="button" class="text-brand-text-muted hover:text-white text-xl leading-none" aria-label="Close cart" data-cart-close>×</button>
+    </header>
+    <div class="flex-1 overflow-y-auto px-5 py-4 space-y-4 text-sm" data-cart-lines>
+      <p class="text-brand-text-muted">Your cart is empty.</p>
+    </div>
+    <footer class="px-5 py-4 border-t border-brand-border space-y-3">
+      <div class="flex justify-between font-mono text-sm"><span class="text-brand-text-muted">Subtotal</span><span data-cart-subtotal>$0.00</span></div>
+      <a class="block w-full py-3 bg-white text-black font-bold rounded-lg text-center hover:bg-brand-accent transition-colors pointer-events-none opacity-40" data-cart-checkout href="#">Checkout on Shopify</a>
+      <p class="text-xs text-brand-text-subtle" data-cart-note>{shopifyConfigured ? 'Prices confirmed at checkout. Payment is handled by Shopify; this site never sees card details.' : 'The store is opening soon. Prices shown are indicative until checkout is live.'}</p>
+    </footer>
+  </aside>
+</div>
+<script src="../scripts/cart.ts"></script>

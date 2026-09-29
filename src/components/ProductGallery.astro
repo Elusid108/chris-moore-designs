@@ -1,0 +1,23 @@
+---
+// Extra images and videos below the fold on a product page.
+import type { Product } from '../lib/content';
+interface Props { product: Product }
+const { product } = Astro.props;
+const items = [
+  ...product.images.slice(1).map((i) => ({ type: 'image' as const, url: i.hero || i.url, thumb: i.thumb, caption: i.alt })),
+  ...product.gallery.map((g) => ({ type: g.type, url: g.url, thumb: g.thumb || g.poster, caption: g.caption, poster: g.poster })),
+];
+---
+{items.length > 0 && (
+  <section>
+    <h2 class="text-2xl font-bold mb-4">Gallery</h2>
+    <div class="grid sm:grid-cols-2 gap-4">
+      {items.map((it) => (
+        <figure class="rounded-xl overflow-hidden border border-brand-border bg-black">
+          {it.type === 'video' ? <video controls preload="none" poster={it.poster || undefined} class="w-full aspect-video"><source src={it.url} /></video> : <img src={it.url} alt={it.caption || ''} loading="lazy" class="w-full aspect-[4/3] object-cover" />}
+          {it.caption && <figcaption class="px-3 py-2 text-xs text-brand-text-muted">{it.caption}</figcaption>}
+        </figure>
+      ))}
+    </div>
+  </section>
+)}

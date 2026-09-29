@@ -1,13 +1,14 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCatalog } from '../lib/content';
 import Base from '../layouts/Base.astro';
 import ReleaseList from '../components/ReleaseList.astro';
-const releases = (await getCollection('firmware')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const c = await getCatalog();
 ---
-<Base title="Firmware" description="Firmware releases for PixelDecode boards and PixelPilot.">
-  <section class="pt-32 pb-20 container mx-auto px-4 sm:px-6 max-w-3xl">
+<Base title="Firmware" description="Firmware releases for PixelDecode boards and PixelPilot, with web installer and OTA.">
+  <section class="pt-12 pb-20 container mx-auto px-4 sm:px-6 max-w-3xl">
     <p class="font-mono text-xs uppercase tracking-widest text-brand-accent mb-2">Firmware</p>
-    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-10">Releases</h1>
-    <ReleaseList releases={releases} />
+    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-3">Releases</h1>
+    <p class="text-brand-text-muted mb-10">Every board ships with the latest firmware. Update over the air from PixelPilot, or from a browser with the web installer.</p>
+    <ReleaseList releases={c.firmware} productById={c.productById} />
   </section>
 </Base>

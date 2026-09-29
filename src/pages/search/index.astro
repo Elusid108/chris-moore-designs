@@ -1,0 +1,10 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+<Base title="Search" description="Search products, firmware, software and services.">
+  <section class="pt-12 pb-20 container mx-auto px-4 sm:px-6 max-w-3xl" data-search-page>
+    <p class="font-mono text-xs uppercase tracking-widest text-brand-accent mb-2">Search</p>
+    <form action="/search/" method="get" class="mb-8"><label class="sr-only" for="q">Search</label><input id="q" name="q" type="search" class="w-full bg-brand-surface border border-brand-border rounded-pill px-5 py-3 text-lg placeholder:text-brand-text-subtle focus:border-brand-accent-strong" placeholder="Search boards, firmware, docs…" /></form>
+    <ul class="space-y-3" data-search-page-results><li class="text-brand-text-muted">Searching…</li></ul>
+  </section>
+</Base>

@@ -1,0 +1,15 @@
+---
+// Product render tile. Uses the first image when present, otherwise the
+// glowing placeholder from the mockup so pages look finished before photos exist.
+import type { Product } from '../lib/content';
+interface Props { product: Product; size?: 'hero' | 'thumb' | 'full'; class?: string; eager?: boolean }
+const { product, size = 'hero', class: cls = '', eager = false } = Astro.props;
+const img = product.images[0];
+const src = img ? (size === 'thumb' ? img.thumb || img.hero || img.url : size === 'hero' ? img.hero || img.url : img.url) : null;
+const alt = img?.alt || product.title;
+---
+{src ? (
+  <img src={src} alt={alt} class={`w-full h-full object-cover ${cls}`} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+) : (
+  <div class={`w-full h-full render-placeholder ${cls}`} role="img" aria-label={`${product.title} (image coming soon)`}></div>
+)}

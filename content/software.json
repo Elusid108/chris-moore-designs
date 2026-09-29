@@ -1,0 +1,76 @@
+[
+  {
+    "id": "d3f4e5a6-3333-4c7d-8e1f-2a3b4c5d6e01",
+    "slug": "pixelpilot-desktop",
+    "name": "PixelPilot Desktop",
+    "order": 1,
+    "platforms": [
+      "windows",
+      "macos",
+      "linux"
+    ],
+    "version": "0.9.0",
+    "summary": "Companion PC app for mapping, previewing and uploading shows to PixelPilot and PixelDecode devices.",
+    "description": "<p>Pixel mapping from a photo, live preview over the network, and a one-click firmware flasher.</p>",
+    "repo": "https://github.com/Elusid108/pixelpilot-desktop",
+    "releaseUrl": "https://github.com/Elusid108/pixelpilot-desktop/releases/latest",
+    "appUrl": null,
+    "screenshots": [],
+    "wip": false,
+    "timestamp": "2026-09-29T00:00:00.000Z"
+  },
+  {
+    "id": "d3f4e5a6-3333-4c7d-8e1f-2a3b4c5d6e02",
+    "slug": "litholab",
+    "name": "LithoLab",
+    "order": 2,
+    "platforms": [
+      "web"
+    ],
+    "version": null,
+    "summary": "Browser tool that turns a photo into a printable color lithophane.",
+    "description": "",
+    "repo": "https://github.com/Elusid108/LithoLab",
+    "releaseUrl": null,
+    "appUrl": "https://elusid108.github.io/LithoLab/",
+    "screenshots": [],
+    "wip": false,
+    "timestamp": "2026-09-29T00:00:00.000Z"
+  },
+  {
+    "id": "d3f4e5a6-3333-4c7d-8e1f-2a3b4c5d6e03",
+    "slug": "lithopalletgen",
+    "name": "LithoPalletGen",
+    "order": 3,
+    "platforms": [
+      "web"
+    ],
+    "version": null,
+    "summary": "Generates filament palettes and swap heights for multi-color lithophanes.",
+    "description": "",
+    "repo": "https://github.com/Elusid108/LithoPalletGen",
+    "releaseUrl": null,
+    "appUrl": "https://elusid108.github.io/LithoPalletGen/",
+    "screenshots": [],
+    "wip": false,
+    "timestamp": "2026-09-29T00:00:00.000Z"
+  },
+  {
+    "id": "d3f4e5a6-3333-4c7d-8e1f-2a3b4c5d6e04",
+    "slug": "borderbuilder",
+    "name": "BorderBuilder",
+    "order": 4,
+    "platforms": [
+      "web"
+    ],
+    "version": null,
+    "summary": "Frames and borders for lithophane prints.",
+    "description": "",
+    "repo": "https://github.com/Elusid108/BorderBuilder",
+    "releaseUrl": null,
+    "appUrl": "https://elusid108.github.io/BorderBuilder/",
+    "screenshots": [],
+    "wip": true,
+    "timestamp": "2026-09-29T00:00:00.000Z"
+  }
+]
