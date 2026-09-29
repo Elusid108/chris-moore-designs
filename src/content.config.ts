@@ -5,6 +5,9 @@ import { file } from 'astro/loaders';
 // Source of truth is content/*.json, written by the local CMS (CMS/). Every
 // collection is a JSON array of objects with a unique `id` (UUID) and a `slug`
 // used for URLs. Rich text fields hold Quill HTML and are rendered with set:html.
+// The CMS preview points CMD_CONTENT_DIR at a copy with drafts merged in.
+
+const dir = process.env.CMD_CONTENT_DIR || './content';
 
 const html = z.string().default('');
 const imageSet = z.object({
@@ -18,7 +21,7 @@ const imageSet = z.object({
 });
 
 const families = defineCollection({
-  loader: file('./content/families.json'),
+  loader: file(`${dir}/families.json`),
   schema: z.object({
     id: z.string(), slug: z.string(), name: z.string(), tagline: z.string().default(''),
     category: z.enum(['hardware', 'software', 'systems', 'tooling', 'lighting', 'art']).default('hardware'),
@@ -28,7 +31,7 @@ const families = defineCollection({
 });
 
 const products = defineCollection({
-  loader: file('./content/products.json'),
+  loader: file(`${dir}/products.json`),
   schema: z.object({
     id: z.string(), slug: z.string(), slugHistory: z.array(z.string()).default([]),
     title: z.string(), sku: z.string(), family: z.string(),
@@ -52,7 +55,7 @@ const products = defineCollection({
 });
 
 const firmware = defineCollection({
-  loader: file('./content/firmware.json'),
+  loader: file(`${dir}/firmware.json`),
   schema: z.object({
     id: z.string(), slug: z.string(), name: z.string(), version: z.string(), date: z.string(), targets: z.array(z.string()).default([]),
     downloadUrl: z.string().nullable().optional(), file: z.object({ url: z.string(), size: z.number().nullable().optional() }).nullable().optional(),
@@ -62,7 +65,7 @@ const firmware = defineCollection({
 });
 
 const software = defineCollection({
-  loader: file('./content/software.json'),
+  loader: file(`${dir}/software.json`),
   schema: z.object({
     id: z.string(), slug: z.string(), name: z.string(), summary: z.string().default(''), description: html,
     platforms: z.array(z.enum(['windows', 'macos', 'linux', 'web', 'raspberry-pi'])).default([]), version: z.string().nullable().optional(),
@@ -72,7 +75,7 @@ const software = defineCollection({
 });
 
 const services = defineCollection({
-  loader: file('./content/services.json'),
+  loader: file(`${dir}/services.json`),
   schema: z.object({
     id: z.string(), slug: z.string(), name: z.string(), summary: z.string().default(''), description: html,
     startingPrice: z.number().nullable().optional(), quoteUrl: z.string().nullable().optional(), image: imageSet.nullable().optional(),

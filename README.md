@@ -36,7 +36,7 @@ public/            favicon, robots.txt, .nojekyll, media/ and og/ (CMS-managed) 
 
 ## CMS
 
-The store is edited with a local CMS in `CMS/`, in the same spirit as the portfolio's: an Express app bound to `127.0.0.1:3000` with no login. It writes `content/*.json` and `public/media/`, keeps unpublished items in a gitignored drafts file, previews the site with `astro dev`, and publishes by committing and pushing to `main` (GitHub Actions then deploys). Products can also be synced to Shopify (see `docs/SHOPIFY-SETUP.md`).
+The store is edited with a local CMS in `CMS/`, in the same spirit as the portfolio's: an Express app bound to `127.0.0.1:3000` with no login. It writes `content/*.json` and `public/media/`, keeps unpublished items in a gitignored drafts file, previews the site (drafts included) as a local production build, and publishes by committing and pushing to `main` (GitHub Actions then deploys). Products can also be synced to Shopify (see `docs/SHOPIFY-SETUP.md`).
 
 ```sh
 cd CMS

@@ -5,6 +5,8 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const sharp = require('sharp');
+// libvips keeps opened files cached, which locks them on Windows (EBUSY on trash/delete).
+sharp.cache(false);
 const convertHeic = require('heic-convert');
 const { ROOT, MEDIA_DIR, TRASH_DIR, MEDIA_WEB_PREFIX } = require('./paths');
 

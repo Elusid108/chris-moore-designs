@@ -5,7 +5,6 @@ const multer = require('multer');
 const path = require('path');
 const os = require('os');
 const fs = require('fs');
-const { spawn } = require('child_process');
 const { loadEnv } = require('./lib/env');
 loadEnv();
 const { ROOT, MEDIA_DIR } = require('./lib/paths');
@@ -15,6 +14,7 @@ const video = require('./lib/video');
 const disk = require('./lib/disk');
 const git = require('./lib/git');
 const publish = require('./lib/publish');
+const preview = require('./lib/preview');
 let shopify = null;
 try { shopify = require('./lib/shopify-admin'); } catch { /* Phase 4 */ }
 let gemini = null;
@@ -68,7 +68,7 @@ const wrap = (fn) => (req, res) => Promise.resolve(fn(req, res)).catch((err) => 
 // --- status ---
 app.get('/api/status', wrap(async (req, res) => {
   const g = await git.status();
-  res.json({ version: PKG.version, root: ROOT, git: g, repo: git.repoWebUrl(g.remote), shopify: shopify ? await shopify.status() : { configured: false, ok: false, error: 'Shopify sync not installed yet' }, gemini: Boolean(gemini), preview: previewState() });
+  res.json({ version: PKG.version, root: ROOT, git: g, repo: git.repoWebUrl(g.remote), shopify: shopify ? await shopify.status() : { configured: false, ok: false, error: 'Shopify sync not installed yet' }, gemini: Boolean(gemini), preview: preview.state() });
 }));
 app.get('/api/storage', (req, res) => res.json(disk.getStorage()));
 
@@ -135,21 +135,10 @@ app.post('/api/publish', wrap(async (req, res) => {
 }));
 app.get('/api/publish/run', wrap(async (req, res) => res.json(await publish.fetchActionsRun({ owner: req.query.owner, repo: req.query.repo, sha: req.query.sha }))));
 
-// --- preview (astro dev) ---
-let preview = null;
-const PREVIEW_PORT = 4321;
-function previewState() { return { running: Boolean(preview && preview.exitCode === null), url: `http://127.0.0.1:${PREVIEW_PORT}/`, port: PREVIEW_PORT }; }
-app.get('/api/preview/status', (req, res) => res.json(previewState()));
-app.post('/api/preview/start', (req, res) => {
-  if (preview && preview.exitCode === null) return res.json(previewState());
-  const bin = path.join(ROOT, 'node_modules', '.bin', process.platform === 'win32' ? 'astro.cmd' : 'astro');
-  const log = fs.openSync(path.join(__dirname, 'data', 'preview.log'), 'a');
-  preview = spawn(bin, ['dev', '--host', '127.0.0.1', '--port', String(PREVIEW_PORT)], { cwd: ROOT, stdio: ['ignore', log, log], shell: process.platform === 'win32' });
-  preview.on('exit', () => { preview = null; });
-  res.json(previewState());
-});
-app.post('/api/preview/stop', (req, res) => { if (preview) { preview.kill(); preview = null; } res.json(previewState()); });
-process.on('exit', () => { if (preview) preview.kill(); });
+// --- preview (production build with drafts merged in, served locally) ---
+app.get('/api/preview/status', (req, res) => res.json(preview.state()));
+app.post('/api/preview/start', (req, res) => res.json(preview.start()));
+app.post('/api/preview/stop', (req, res) => res.json(preview.stop()));
 
 // --- shopify (Phase 4) ---
 app.get('/api/shopify/status', wrap(async (req, res) => res.json(shopify ? await shopify.status() : { configured: false, ok: false, error: 'Shopify sync not installed yet' })));

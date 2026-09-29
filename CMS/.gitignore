@@ -4,3 +4,4 @@ node_modules/
 data/drafts.json
 data/shopify-cache.json
 data/preview.log
+data/preview/
