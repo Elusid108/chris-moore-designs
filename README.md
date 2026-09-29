@@ -17,7 +17,7 @@ It is a sibling of the portfolio at [chrismoore.me](https://chrismoore.me) ([Elu
 npm ci
 cp .env.example .env   # optional: fill in Shopify values to enable the cart
 npm run dev            # http://localhost:4321
-npm run build          # -> dist/ (also copies design/mockups -> dist/mockups)
+npm run build          # -> dist/
 npm run check          # astro check (types)
 ```
 
@@ -31,7 +31,7 @@ CMS/               local admin app (server.js, lib/, public/)
 src/components/    Nav, Footer, Wordmark, PixelField, Cart, AddToCart, SpecTable, ReleaseList
 src/lib/shopify.ts Storefront API client (public token only)
 src/pages/         index, families/[slug], products/[slug], firmware, software, services
-public/            favicon, robots.txt, .nojekyll  (add CNAME when the domain is split)
+public/            favicon, robots.txt, .nojekyll, media/ and og/ (CMS-managed)  (add CNAME when the domain is split)
 ```
 
 ## CMS
@@ -50,7 +50,7 @@ Flow: add or edit an item → **Save** (local draft, amber dot) → **Publish it
 
 ## Status
 
-The Storefront direction is built out; the other four mockups remain in `design/mockups/` (served at `/mockups/`) for reference. The cart shows “Coming soon” until products carry Shopify variant ids.
+The Storefront direction is built out; the five original mockups remain in `design/mockups/` for reference (open them from the repo; they are no longer deployed). The cart shows “Coming soon” until products carry Shopify variant ids.
 
 ## Deploy
 

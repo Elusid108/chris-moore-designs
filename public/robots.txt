@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /mockups/
 
 Sitemap: https://chrismooredesigns.com/sitemap-index.xml

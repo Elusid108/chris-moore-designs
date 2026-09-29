@@ -1,7 +1,7 @@
 import { api } from './api.js';
 import { esc } from './form.js';
 import { toast } from './ui/toast.js';
-const STEPS = [['validate', 'Validate content'], ['shopify', 'Sync to Shopify'], ['build', 'Verify build'], ['git', 'Commit & push'], ['deploy', 'GitHub Pages deploy']];
+const STEPS = [['validate', 'Validate content'], ['shopify', 'Sync to Shopify'], ['og', 'Share images'], ['build', 'Verify build'], ['git', 'Commit & push'], ['deploy', 'GitHub Pages deploy']];
 const icon = { pending: 'ph-circle text-zinc-600', running: 'ph-spinner animate-spin text-cyan-400', done: 'ph-check-circle text-emerald-400', error: 'ph-x-circle text-red-400', warn: 'ph-warning text-amber-400', skipped: 'ph-minus-circle text-zinc-500' };
 let es = null;
 function row(step) { return document.querySelector(`[data-step="${step}"]`); }

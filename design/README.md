@@ -17,9 +17,7 @@ cannot import from this repo, so the same two files are **copied** into
 ## Mockups
 
 `mockups/` holds the five candidate UI directions as self-contained HTML pages
-(Tailwind CDN + Google Fonts, no build). They are copied verbatim into
-`dist/mockups/` by `scripts/copy-mockups.mjs` after every build so they can be
-viewed on the deployed site, and are excluded from `astro check`.
+(Tailwind CDN + Google Fonts, no build). They are kept for reference and are not deployed.
 
 Once a direction is chosen, the winning page is the reference for building the
 real components under `src/components/`; the mockups folder can then be deleted.

@@ -33,7 +33,7 @@ export function open(root, settings) {
 
   root.innerHTML = `
     <div class="flex items-start justify-between gap-4 mb-4"><div><p class="font-mono text-[11px] uppercase tracking-widest text-cyan-400">Settings</p><h2 class="text-2xl font-bold">Store settings</h2></div><div>${btn('<i class="ph ph-floppy-disk"></i> Save', 'save', 'primary')}</div></div>
-    ${tabs([{ id: 'store', label: 'Store' }, { id: 'home', label: 'Home page' }, { id: 'footer', label: 'Footer' }, { id: 'shopify', label: 'Shopify' }], 'store')}
+    ${tabs([{ id: 'store', label: 'Store' }, { id: 'home', label: 'Home page' }, { id: 'footer', label: 'Footer' }, { id: 'shopify', label: 'Shopify' }, { id: 'ai', label: 'AI' }], 'store')}
     <div data-tab-panel="store" class="space-y-5">${section('Site', fields(SITE, s.site))}</div>
     <div data-tab-panel="home" class="hidden space-y-5">
       ${section('Hero', fields(HOME, s.home) + `<div><label class="block text-[11px] font-mono uppercase tracking-wide text-zinc-500 mb-1">Hero variant pills</label><p class="text-[11px] text-zinc-500 mb-2">Products whose variants appear as pills on the home hero (lets the hero switch between sibling boards).</p><div class="grid sm:grid-cols-2 gap-1">${products.map((p) => `<label class="flex items-center gap-2 text-sm py-1"><input type="checkbox" class="accent-cyan-400" data-hero-pill value="${p.id}" ${(s.home.heroVariantsFrom || []).includes(p.id) ? 'checked' : ''}> ${esc(p.title)}</label>`).join('')}</div></div>`)}
@@ -45,6 +45,7 @@ export function open(root, settings) {
       ${section('Trust rows', `<div class="space-y-2" data-list="trustrows">${listRows(s.footer.trustRows || [], trustRow)}</div>`, btn('<i class="ph ph-plus"></i>', 'add-trustrow'))}
       ${section('Footer links', `<div class="space-y-2" data-list="links">${listRows(s.footer.links || [], linkRow)}</div>`, btn('<i class="ph ph-plus"></i>', 'add-link'))}
     </div>
+    <div data-tab-panel="ai" class="hidden space-y-5">${section('Gemini copywriting', `<p class="text-[11px] text-zinc-500">Optional. The key is kept in this browser only (localStorage) and sent with each request; it is never written to the repo. Get one at aistudio.google.com.</p><div class="grid sm:grid-cols-2 gap-4 mt-3"><div><label class="block text-[11px] font-mono uppercase tracking-wide text-zinc-500 mb-1">API key</label><input type="password" data-gemini-key class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm font-mono" value="${esc(localStorage.getItem('cms.geminiKey') || '')}"></div><div><label class="block text-[11px] font-mono uppercase tracking-wide text-zinc-500 mb-1">Model</label><input data-gemini-model class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm font-mono" value="${esc(localStorage.getItem('cms.geminiModel') || 'gemini-2.5-flash')}"></div></div><div class="mt-3">${btn('Save key in this browser', 'save-gemini', 'primary')}</div>`)}</div>
     <div data-tab-panel="shopify" class="hidden space-y-5">${section('Storefront (public values, committed)', fields(SHOP, s.shopify))}${section('Admin connection (local only)', `<div data-shopify-status class="text-sm text-zinc-400">Checking…</div><p class="text-[11px] text-zinc-500 mt-2">Set SHOPIFY_STORE_DOMAIN and SHOPIFY_ADMIN_TOKEN in CMS/.env, then restart the CMS. See docs/SHOPIFY-SETUP.md.</p>`)}</div>`;
 
   root.querySelectorAll('[data-list]').forEach((list) => {
@@ -70,7 +71,7 @@ export function open(root, settings) {
         footer: { trustRows: rows('trustrows', ['icon', 'title', 'text']), links: rows('links', ['label', 'href']) },
       };
     },
-    action(a) { if (a === 'add-trust') add('trust', textRow()); if (a === 'add-strip') add('strip', stripRow()); if (a === 'add-trustrow') add('trustrows', trustRow()); if (a === 'add-link') add('links', linkRow()); },
+    action(a) { if (a === 'save-gemini') { try { localStorage.setItem('cms.geminiKey', root.querySelector('[data-gemini-key]').value.trim()); localStorage.setItem('cms.geminiModel', root.querySelector('[data-gemini-model]').value.trim() || 'gemini-2.5-flash'); window.cmsToast?.('Saved in this browser'); } catch { window.cmsToast?.('Could not save (storage blocked)', 'err'); } return; } if (a === 'add-trust') add('trust', textRow()); if (a === 'add-strip') add('strip', stripRow()); if (a === 'add-trustrow') add('trustrows', trustRow()); if (a === 'add-link') add('links', linkRow()); },
     previewPath: '/',
   };
 }

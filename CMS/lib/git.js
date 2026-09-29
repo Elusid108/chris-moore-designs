@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const { ROOT } = require('./paths');
 
-const PUBLISH_PATHS = ['content', 'public/media'];
+const PUBLISH_PATHS = ['content', 'public/media', 'public/og'];
 
 function git(args, { cwd = ROOT, timeout = 120000 } = {}) {
   return new Promise((resolve, reject) => {

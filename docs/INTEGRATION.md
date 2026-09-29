@@ -25,9 +25,12 @@ Two static sites, one brand, one commerce backend. Nothing on GitHub Pages ever 
 
 ## 2. Architecture of the new site
 
+**Content and the CMS.** Everything the site shows comes from `content/*.json` (families, products, firmware, software, services, settings). Those files are written by the local CMS in `CMS/`, a small Express app that runs on your machine only (`127.0.0.1:3000`, no login, cross-site guard). Unpublished items stay in a gitignored drafts file until you promote them, so the public repo never contains work in progress or pre-launch prices. Publish = validate → sync changed products to Shopify → render share images → optional build check → `git add content public/media public/og` → commit → push; GitHub Actions builds and deploys. Media is stored under `public/media/<family>/<product>/` as WebP at 2000/1200/800 px; unused files move to `CMS/.trash`. See the README for the day-to-day flow and `docs/SHOPIFY-SETUP.md` for the store connection.
+
+
 **Stack.** Astro (static output) with Tailwind v4 through PostCSS. No client framework; the only JavaScript that ships is the nav toggle, the PixelField canvas and the cart island.
 
-**Content model.** `src/content/` with Zod schemas in `src/content.config.ts`:
+**Content model.** JSON collections loaded by `file()` loaders with Zod schemas in `src/content.config.ts`:
 
 | Collection | What it is | Key fields |
 |---|---|---|
@@ -37,7 +40,7 @@ Two static sites, one brand, one commerce backend. Nothing on GitHub Pages ever 
 | `software` | Desktop/web apps, including the litho tools | `platforms[]`, `repo`, `releaseUrl`, `appUrl` |
 | `services` | Made-to-order work | `startingPrice`, `relatedApps[]` |
 
-Pages: `/`, `/families/<slug>/`, `/products/<slug>/`, `/firmware/`, `/software/`, `/services/`. Add a `docs/` collection later for wiring guides; the Docs First mockup shows the shape.
+Pages: `/`, `/families/<slug>/`, `/products/<slug>/`, `/firmware/`, `/software/`, `/services/`, `/search/` (client-side over a build-time index). Add a `docs/` collection later for wiring guides; the Docs First mockup shows the shape.
 
 **Design tokens shared with the portfolio.** `design/tokens.json` is the source; `design/tokens.css` is its Tailwind `@theme` rendering. The portfolio compiles Tailwind inside its CMS and cannot import from this repo, so the two files are copied into `Portfolio/CMS/design/` and diffed on change. A shared npm package would be overkill for two repos. The PixelField constants live in the same file so both heroes animate identically.
 
@@ -59,6 +62,8 @@ Until then the site is served at `https://elusid108.github.io/chris-moore-design
 - Families carry `portfolioSlug`, so family pages link back to `chrismoore.me/projects/<slug>/`.
 
 ## 3. Shopify integration
+
+**Product data flows one way: CMS → Shopify.** Prices, variants, images and copy are authored in the CMS and pushed with the Admin API (`productSet`), which writes the Shopify ids back into `content/products.json`. Shopify is authoritative only for inventory at checkout time and for orders.
 
 **Use the Storefront API directly, not the Buy Button SDK.** The Buy Button library is a wrapper around the same Storefront API, is large, and is not actively developed. A `fetch` wrapper (`src/lib/shopify.ts`, about 120 lines) gives full control over CSP and bundle size.
 

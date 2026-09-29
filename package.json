@@ -6,7 +6,7 @@
   "description": "Chris Moore Designs — main site (chrismooredesigns.com). Astro + Tailwind, deployed to GitHub Pages.",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node scripts/copy-mockups.mjs",
+    "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
     "astro": "astro"

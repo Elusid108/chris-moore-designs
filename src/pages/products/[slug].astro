@@ -26,7 +26,7 @@ const ld = {
   offers: { '@type': 'AggregateOffer', priceCurrency: c.settings.site.currency, lowPrice: price.min, highPrice: price.max, offerCount: p.variants.length, availability: 'https://schema.org/PreOrder', url: new URL(`/products/${p.slug}/`, Astro.site).toString() },
 };
 ---
-<Base title={p.title} description={stripHtml(p.summary)} image={p.images[0]?.hero || p.images[0]?.url || '/og.jpg'}>
+<Base title={p.title} description={stripHtml(p.summary)} image={`/og/${p.slug}.jpg`}>
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   <nav aria-label="Breadcrumb" class="container mx-auto px-4 sm:px-6 pt-6 font-mono text-xs text-brand-text-subtle flex gap-2">
     <a href="/#shop" class="hover:text-white">Shop</a><span>/</span>{family && <><a href={`/families/${family.slug}/`} class="hover:text-white">{family.name}</a><span>/</span></>}<span class="text-brand-accent">{p.sku}</span>

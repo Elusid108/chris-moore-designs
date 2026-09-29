@@ -7,6 +7,7 @@ const data = require('./data');
 const git = require('./git');
 const { ROOT, MEDIA_DIR } = require('./paths');
 const { webPathToAbs, collectPaths } = require('./media');
+const og = require('./og');
 
 function validate() {
   const errors = [], warnings = [];
@@ -53,6 +54,8 @@ async function publish({ message, dryRun = false, verifyBuild = true, beforeGit 
   if (v.errors.length) { emit('validate', 'error', v.errors.join('\n')); const e = new Error('Validation failed'); e.details = v; throw e; }
   emit('validate', 'done', v.warnings.length ? `${v.warnings.length} warning(s)` : 'OK');
   if (beforeGit) await beforeGit(emit);
+  emit('og', 'running', 'Rendering share images');
+  try { await og.generateAll(emit); } catch (err) { emit('og', 'warn', `Share images skipped: ${err.message}`); }
   if (verifyBuild) { try { await runBuild(emit); emit('build', 'done', 'Build OK'); } catch (err) { emit('build', 'error', err.message); throw err; } }
   else emit('build', 'skipped', 'Build check skipped');
   const result = await git.publish({ message, dryRun, emit });

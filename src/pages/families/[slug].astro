@@ -12,7 +12,7 @@ const f = c.familyById.get(Astro.props.id)!;
 const products = c.products.filter((p) => p.family === f.id);
 const hero = f.heroImage;
 ---
-<Base title={f.name} description={f.tagline}>
+<Base title={f.name} description={f.tagline} image={`/og/family-${f.slug}.jpg`}>
   <section class="container mx-auto px-4 sm:px-6 pt-10 pb-6 grid lg:grid-cols-2 gap-8 items-center">
     <div>
       <p class="font-mono text-xs uppercase tracking-widest text-brand-accent">{f.category} · product family</p>
