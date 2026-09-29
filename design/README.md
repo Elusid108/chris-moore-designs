@@ -23,3 +23,11 @@ viewed on the deployed site, and are excluded from `astro check`.
 
 Once a direction is chosen, the winning page is the reference for building the
 real components under `src/components/`; the mockups folder can then be deleted.
+
+## Preview images
+
+`mockups/previews/` holds a desktop (1366 px) and a phone (390 px) screenshot of
+each mockup, used as thumbnails on the gallery page. They were captured with
+headless Chromium with one PXD-8 in the mock cart. The sandbox they were made in
+could not reach Google Fonts, so they show the fallback sans and mono faces
+rather than Inter and JetBrains Mono. Re-capture them after a mockup changes.
