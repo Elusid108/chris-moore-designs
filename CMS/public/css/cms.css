@@ -1,0 +1,12 @@
+body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background: #09090b; color: #e4e4e7; }
+.font-mono, code, pre, .ql-editor code { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+.quill-dark .ql-toolbar { background: #18181b; border: 1px solid #27272a; border-radius: .5rem .5rem 0 0; }
+.quill-dark .ql-container { background: #09090b; border: 1px solid #27272a; border-top: 0; border-radius: 0 0 .5rem .5rem; min-height: 8rem; font-size: .9rem; color: #e4e4e7; }
+.quill-dark .ql-editor.ql-blank::before { color: #52525b; font-style: normal; }
+.quill-dark .ql-snow .ql-stroke { stroke: #a1a1aa; } .quill-dark .ql-snow .ql-fill { fill: #a1a1aa; } .quill-dark .ql-snow .ql-picker { color: #a1a1aa; }
+.quill-dark .ql-snow.ql-toolbar button:hover .ql-stroke, .quill-dark .ql-snow.ql-toolbar button.ql-active .ql-stroke { stroke: #22d3ee; }
+.ql-editor a { color: #22d3ee; }
+::-webkit-scrollbar { width: 8px; height: 8px; } ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
+[data-row].dragging { opacity: .4; }
+input[type=number] { -moz-appearance: textfield; } input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+:focus-visible { outline: 2px solid #22d3ee; outline-offset: 1px; border-radius: 4px; }

@@ -7,7 +7,7 @@ It is a sibling of the portfolio at [chrismoore.me](https://chrismoore.me) ([Elu
 ## Stack
 
 - [Astro](https://astro.build) (static output) + Tailwind CSS v4
-- Content collections in `src/content/` (families, products, firmware, software, services)
+- Content collections loaded from `content/*.json` (families, products, firmware, software, services), written by the CMS
 - Shopify Storefront API for cart + hosted checkout (see `docs/INTEGRATION.md`)
 - GitHub Pages via `.github/workflows/deploy.yml`
 
@@ -26,16 +26,31 @@ npm run check          # astro check (types)
 ```
 design/            tokens.json + tokens.css (shared with the portfolio), mockups/
 docs/INTEGRATION.md  architecture + Shopify/GitHub Pages security notes
-src/content/       markdown entries per collection, schemas in src/content.config.ts
+content/           JSON per collection + settings.json (source of truth, CMS-managed)
+CMS/               local admin app (server.js, lib/, public/)
 src/components/    Nav, Footer, Wordmark, PixelField, Cart, AddToCart, SpecTable, ReleaseList
 src/lib/shopify.ts Storefront API client (public token only)
 src/pages/         index, families/[slug], products/[slug], firmware, software, services
 public/            favicon, robots.txt, .nojekyll  (add CNAME when the domain is split)
 ```
 
+## CMS
+
+The store is edited with a local CMS in `CMS/`, in the same spirit as the portfolio's: an Express app bound to `127.0.0.1:3000` with no login. It writes `content/*.json` and `public/media/`, keeps unpublished items in a gitignored drafts file, previews the site with `astro dev`, and publishes by committing and pushing to `main` (GitHub Actions then deploys). Products can also be synced to Shopify (see `docs/SHOPIFY-SETUP.md`).
+
+```sh
+cd CMS
+npm ci
+cp .env.example .env    # optional: Shopify Admin credentials, local only
+npm start               # http://localhost:3000  (Windows: launch.bat)
+npm test                # API + git publish tests
+```
+
+Flow: add or edit an item → **Save** (local draft, amber dot) → **Publish item** (moves into `content/`, green dot) → **Publish** in the header (validate → optional Shopify sync → optional build check → commit + push). Drafts and pre-launch prices never reach GitHub.
+
 ## Status
 
-The five candidate UI directions live in `design/mockups/` and are served at `/mockups/` on the deployed site. `src/pages/index.astro` is a placeholder until one is chosen.
+The Storefront direction is built out; the other four mockups remain in `design/mockups/` (served at `/mockups/`) for reference. The cart shows “Coming soon” until products carry Shopify variant ids.
 
 ## Deploy
 

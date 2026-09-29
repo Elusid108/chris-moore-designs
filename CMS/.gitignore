@@ -1,0 +1,6 @@
+node_modules/
+.env
+.trash/
+data/drafts.json
+data/shopify-cache.json
+data/preview.log

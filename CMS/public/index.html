@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Store CMS · Chris Moore Designs</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2309090b'/%3E%3Cpolygon points='35,8 14,36 31,36 29,56 50,28 33,28' fill='%2322d3ee'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter','ui-sans-serif','system-ui'], mono: ['JetBrains Mono','ui-monospace'] } } } }</script>
+<link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/toastify-js@1.12.0/src/toastify.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/toastify-js@1.12.0/src/toastify.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" rel="stylesheet">
+<link href="css/cms.css" rel="stylesheet">
+</head>
+<body class="min-h-screen antialiased">
+<header class="sticky top-0 z-30 bg-zinc-950/95 backdrop-blur border-b border-zinc-800">
+  <div class="px-4 h-14 flex items-center gap-4">
+    <a href="#/" class="font-bold tracking-tighter flex items-center gap-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span class="whitespace-nowrap">CHRIS MOORE<span class="text-cyan-400">.Designs</span></span><span class="font-mono font-normal text-xs text-zinc-500 ml-2">store cms</span></a>
+    <span id="dirty-dot" class="hidden w-2 h-2 rounded-full bg-amber-400" title="Unsaved changes"></span>
+    <span id="status-line" class="text-xs text-zinc-500 font-mono truncate flex-1"></span>
+    <button type="button" data-action="cleanup" class="text-xs text-zinc-400 hover:text-white px-2 py-1.5" title="Move unused media to trash"><i class="ph ph-broom"></i> Cleanup</button>
+    <button type="button" data-action="refresh" class="text-xs text-zinc-400 hover:text-white px-2 py-1.5"><i class="ph ph-arrows-clockwise"></i> Refresh</button>
+    <button type="button" id="preview-btn" data-action="preview" class="text-xs text-zinc-300 hover:text-white px-3 py-1.5 rounded-lg border border-zinc-700 hover:border-cyan-500"><i class="ph ph-eye"></i> Preview site</button>
+    <button type="button" data-action="publish" class="text-xs font-bold px-3 py-1.5 rounded-lg bg-white text-black hover:bg-cyan-400"><i class="ph ph-rocket-launch"></i> Publish</button>
+  </div>
+</header>
+<div class="flex min-h-[calc(100vh-3.5rem)]">
+  <aside id="rail" class="w-64 shrink-0 border-r border-zinc-800 p-3 overflow-y-auto max-h-[calc(100vh-3.5rem)] sticky top-14"></aside>
+  <main id="editor" class="flex-1 min-w-0 p-6 max-w-5xl"></main>
+</div>
+
+<!-- Upload queue -->
+<div id="upload-queue" class="hidden fixed bottom-4 right-4 w-80 rounded-xl bg-zinc-900 border border-zinc-800 shadow-2xl z-40 overflow-hidden">
+  <div class="px-4 py-2 border-b border-zinc-800 flex items-center gap-2 text-xs"><i id="queue-header-icon" class="ph ph-spinner animate-spin text-cyan-400"></i><span id="queue-header-label" class="flex-1 text-zinc-300">Uploading…</span><span id="queue-eta" class="text-zinc-500 font-mono"></span></div>
+  <div id="queue-items" class="max-h-64 overflow-y-auto divide-y divide-zinc-800"></div>
+</div>
+
+<!-- Confirm -->
+<div id="confirm-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"><div class="absolute inset-0 bg-black/70" data-confirm-cancel></div>
+  <div class="relative w-full max-w-md rounded-xl bg-zinc-900 border border-zinc-800 p-5"><h3 class="font-bold text-lg" data-confirm-title></h3><p class="text-sm text-zinc-400 mt-2" data-confirm-text></p><div class="flex justify-end gap-2 mt-5"><button type="button" class="px-4 py-2 rounded-lg border border-zinc-700 text-sm" data-confirm-cancel>Cancel</button><button type="button" data-confirm-ok class="px-4 py-2 rounded-lg font-bold bg-white text-black">Confirm</button></div></div></div>
+
+<!-- Crop -->
+<div id="crop-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"><div class="absolute inset-0 bg-black/80" data-crop-cancel></div>
+  <div class="relative rounded-xl bg-zinc-900 border border-zinc-800 p-5 space-y-3"><div class="flex justify-between items-center"><h3 class="font-bold" id="crop-modal-label">Crop</h3><button type="button" class="text-zinc-400 hover:text-white" data-crop-cancel><i class="ph ph-x"></i></button></div>
+    <div id="crop-preview-box" class="relative overflow-hidden rounded-lg bg-black cursor-move touch-none select-none"><img id="crop-preview-img" alt="" draggable="false"></div>
+    <div class="grid grid-cols-2 gap-3 text-xs"><label class="block"><span class="text-zinc-500">Zoom</span><input id="crop-zoom-slider" type="range" min="1" max="4" step="0.01" class="w-full accent-cyan-400"></label><label class="block"><span class="text-zinc-500">Rotate</span><input id="crop-rotate-slider" type="range" min="-180" max="180" step="1" class="w-full accent-cyan-400"></label></div>
+    <div class="flex items-center justify-between gap-3"><span id="crop-readout" class="font-mono text-xs text-zinc-500"></span><div class="flex gap-2"><button type="button" class="px-3 py-1.5 rounded-lg border border-zinc-700 text-xs" data-crop-reset>Reset</button><button type="button" class="px-3 py-1.5 rounded-lg border border-zinc-700 text-xs" data-crop-cancel>Cancel</button><button type="button" class="px-3 py-1.5 rounded-lg bg-white text-black text-xs font-bold" data-crop-save>Save crop</button></div></div>
+    <p class="text-[11px] text-zinc-500">Drag to move the focal point, scroll or slide to zoom.</p></div></div>
+
+<!-- Publish -->
+<div id="publish-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4"><div class="absolute inset-0 bg-black/70" data-publish-close></div>
+  <div class="relative w-full max-w-lg rounded-xl bg-zinc-900 border border-zinc-800 p-5 space-y-4">
+    <div class="flex justify-between items-start"><div><h3 class="font-bold text-lg">Publish to GitHub</h3><p class="text-xs text-zinc-500 mt-1" data-publish-summary>…</p></div><button type="button" class="text-zinc-400 hover:text-white" data-publish-close><i class="ph ph-x"></i></button></div>
+    <input name="message" class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm" placeholder="Commit message (optional)">
+    <div class="flex flex-wrap gap-4 text-sm"><label class="flex items-center gap-2"><input type="checkbox" name="verifyBuild" class="accent-cyan-400" checked> Verify build first</label><label class="flex items-center gap-2"><input type="checkbox" name="syncShopify" class="accent-cyan-400" checked> Sync to Shopify</label><label class="flex items-center gap-2"><input type="checkbox" name="dryRun" class="accent-cyan-400"> Dry run</label></div>
+    <div class="space-y-2" data-steps></div>
+    <div data-publish-result class="text-sm"></div>
+    <div class="flex justify-end gap-2"><button type="button" class="px-4 py-2 rounded-lg border border-zinc-700 text-sm" data-publish-close>Close</button><button type="button" class="px-4 py-2 rounded-lg font-bold bg-white text-black hover:bg-cyan-400" data-publish-go><i class="ph ph-rocket-launch"></i> Publish</button></div>
+  </div></div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
