@@ -201,6 +201,17 @@ function saveTasks(body) {
   return { tasks };
 }
 
+/** Apply a patch to a published item in place (used by Shopify sync write-back). */
+function patchPublished(name, id, fn) {
+  assertCollection(name);
+  const items = readPublished(name);
+  const item = items.find((i) => i.id === id);
+  if (!item) return null;
+  fn(item);
+  writePublished(name, items);
+  return item;
+}
+
 /** Every item across all collections, published and draft (for media reference scans). */
 function everything() {
   const d = readDrafts();
@@ -209,4 +220,4 @@ function everything() {
   return out;
 }
 
-module.exports = { COLLECTIONS, assertCollection, list, get, find, save, publishItem, unpublishItem, remove, reorder, getSettings, saveSettings, getTasks, saveTasks, everything, readJSON, writeJSON, readPublished, writePublished, readDrafts, writeDrafts };
+module.exports = { COLLECTIONS, assertCollection, list, get, find, save, publishItem, unpublishItem, remove, reorder, getSettings, saveSettings, getTasks, saveTasks, everything, patchPublished, readJSON, writeJSON, readPublished, writePublished, readDrafts, writeDrafts };
